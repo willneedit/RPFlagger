@@ -82,12 +82,17 @@ function RPFlagger:InitializeUI()
 	local mainPanel = {
 		{
 			type = "description",
-			text = _tr("To have a flag set for others in your guild to be shown, you need to enclose the text in '##RP: ##', for example, '##RP: God amongst mortals ##'. For retrieving purposes, the list in the settings below denote the order of your guilds which are scanned for the other player's flag"),
+			text = 
+			GetString(SI_RPF_EXPLANATION1)
+			.. "\n\n" .. 
+			GetString(SI_RPF_EXPLANATION2)
+			.. "\n\n" .. 
+			GetString(SI_RPF_EXPLANATION3),
 		},
 		{
 			type = "submenu",
-			name = _tr("Settings"),
-			tooltip = _tr("Manage general settings"),	--(optional)
+			name = GetString(SI_RPF_SETTINGS),
+			tooltip = GetString(SI_RPF_SETTINGS_TT),	--(optional)
 			controls = Settings:GetControls(),
 		},
 	}

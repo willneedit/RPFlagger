@@ -27,7 +27,7 @@ function RPF:DisplayLongTxt()
 		function(cn, note) return RPF:GetLongText(cn, note) end )
 	
 	if not longtxt then
-		longtxt = zo_strformat(_tr("|cff8888You see nothing special on <<1>>.|r"), cn)
+		longtxt = zo_strformat(GetString(SI_RPF_LONGTXT_NONE), cn)
 	else
 		longtxt = zo_strformat(_tr("|c88ffffOn <<1>> you notice something...|r\n|c88ffff<<2>>|r"), cn, longtxt)
 	end
