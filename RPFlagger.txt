@@ -28,7 +28,9 @@ RPFlagger.lua
 
 UI/Settings.lua
 Modules/Titles.lua
+Modules/LongTxt.lua
 
 lang/en.lua
 lang/$(language).lua
 
+Bindings.xml

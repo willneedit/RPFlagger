@@ -31,6 +31,9 @@ function RPFlagger:GetSingleTag(text, tagName)
 end
 
 function RPFlagger:GetCharacterRPInfo(accountName, characterName, fun)
+	-- Targeted an NPC
+	if not accountName or accountName == "" then return nil end
+	
 	for i = 1, #self.guildList, 1 do
 		local guildId = self.guildList[i]
 		local memberIndex = GetGuildMemberIndexFromDisplayName(guildId, accountName)
