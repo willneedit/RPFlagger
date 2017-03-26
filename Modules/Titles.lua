@@ -1,6 +1,6 @@
 local DEBUG =
--- function() end
-d
+function() end
+-- d
 
 local function _tr(str)
 	return str
@@ -8,6 +8,22 @@ end
 
 local RPF = RPFlagger
 
+function RPF:GetTitleText(characterName, note)
+	if not note or note == "" then return nil end
+	local start, stop, text = RPF:GetSingleTag(note, "RP_" .. characterName)
+	if text then return text end
+	
+	start, stop, text = RPF:GetSingleTag(note, "RP")
+	return text
+end
+
+function RPF:GetReplacementTitle(accountName, characterName)
+	return self:GetCharacterRPInfo(accountName, characterName,
+		function(cn, note) return RPF:GetTitleText(cn, note) end )
+end
+
+
+-- Hook into the original (or already patched) GetTitle and GetUnitTitle functions
 local GetUnitTitle_original = GetUnitTitle
 local GetTitle_original = GetTitle
 
@@ -29,30 +45,14 @@ end
 
 local function GetUnitTitle_patched(unitTag)
 	local to, dn, cn = GetUnitInfo(unitTag)
-	local tr = RPF:GetReplacementTitle(dn)
+	local tr = RPF:GetReplacementTitle(dn, cn)
 	return tr or to
 end
 
 local function GetTitle_patched(index)
 	local to, dn, cn = GetPlayerInfo(index)
-	local tr = RPF:GetReplacementTitle(dn)
+	local tr = RPF:GetReplacementTitle(dn, cn)
 	return tr or to
-end
-
-function RPF:GetReplacementTitle(displayName)
-	local rn = ""
-	for i = 1, #self.guildList, 1 do
-		local guildId = self.guildList[i]
-		local memberIndex = GetGuildMemberIndexFromDisplayName(guildId, displayName)
-		if memberIndex then
-			local _, note = GetGuildMemberInfo(guildId, memberIndex)
-			local start, stop = string.find(note, "##RP: .* ##")
-			if start and stop then
-				return string.sub(note, start+6, stop-3)
-			end
-		end
-	end
-	return nil
 end
 
 GetTitle = GetTitle_patched

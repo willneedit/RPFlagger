@@ -13,6 +13,36 @@ RPFlagger.LAM = LibStub:GetLibrary("LibAddonMenu-2.0")
 RPFlagger.name = "RPFlagger"
 RPFlagger.loadedAddons = {}
 
+-- We can't rely on string.find and a pattern entirely, because we need a lazy match for
+-- start and end, rather than a greedy match
+function RPFlagger:GetSingleTag(text, tagName)
+	-- '-' seems to have a special meaning
+	local tagName = string.gsub(tagName, "-", ".")
+
+	local start = string.find(text, "##" .. tagName .. ": ")
+	if not start then return nil end
+	
+	local stop = string.find(text, " ##", start+1)
+	if not stop then return nil end
+	
+	start = start + string.len(tagName) + 4
+	
+	return start, stop, string.sub(text, start, stop)
+end
+
+function RPFlagger:GetCharacterRPInfo(accountName, characterName, fun)
+	for i = 1, #self.guildList, 1 do
+		local guildId = self.guildList[i]
+		local memberIndex = GetGuildMemberIndexFromDisplayName(guildId, accountName)
+		if memberIndex then
+			local _, note = GetGuildMemberInfo(guildId, memberIndex)
+			local rpInfoTxt = fun(characterName, note)
+			if rpInfoTxt then return rpInfoTxt end
+		end
+	end
+	return nil
+end
+
 function RPFlagger:help()	
 	-- CHAT_SYSTEM:AddMessage("/im listrules - list the rules currently defined")
 	-- CHAT_SYSTEM:AddMessage("/im dryrun    - show what the currently defined rules would do to your inventory")
