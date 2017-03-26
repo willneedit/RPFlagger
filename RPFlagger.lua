@@ -13,6 +13,39 @@ RPFlagger.LAM = LibStub:GetLibrary("LibAddonMenu-2.0")
 RPFlagger.name = "RPFlagger"
 RPFlagger.loadedAddons = {}
 
+-- We can't rely on string.find and a pattern entirely, because we need a lazy match for
+-- start and end, rather than a greedy match
+function RPFlagger:GetSingleTag(text, tagName)
+	-- '-' seems to have a special meaning
+	local tagName = string.gsub(tagName, "-", ".")
+
+	local start = string.find(text, "##" .. tagName .. ": ")
+	if not start then return nil end
+	
+	local stop = string.find(text, " ##", start+1)
+	if not stop then return nil end
+	
+	start = start + string.len(tagName) + 4
+	
+	return start, stop, string.sub(text, start, stop)
+end
+
+function RPFlagger:GetCharacterRPInfo(accountName, characterName, fun)
+	-- Targeted an NPC
+	if not accountName or accountName == "" then return nil end
+	
+	for i = 1, #self.guildList, 1 do
+		local guildId = self.guildList[i]
+		local memberIndex = GetGuildMemberIndexFromDisplayName(guildId, accountName)
+		if memberIndex then
+			local _, note = GetGuildMemberInfo(guildId, memberIndex)
+			local rpInfoTxt = fun(characterName, note)
+			if rpInfoTxt then return rpInfoTxt end
+		end
+	end
+	return nil
+end
+
 function RPFlagger:help()	
 	-- CHAT_SYSTEM:AddMessage("/im listrules - list the rules currently defined")
 	-- CHAT_SYSTEM:AddMessage("/im dryrun    - show what the currently defined rules would do to your inventory")
@@ -49,12 +82,17 @@ function RPFlagger:InitializeUI()
 	local mainPanel = {
 		{
 			type = "description",
-			text = _tr("To have a flag set for others in your guild to be shown, you need to enclose the text in '##RP: ##', for example, '##RP: God amongst mortals ##'. For retrieving purposes, the list in the settings below denote the order of your guilds which are scanned for the other player's flag"),
+			text = 
+			GetString(SI_RPF_EXPLANATION1)
+			.. "\n\n" .. 
+			GetString(SI_RPF_EXPLANATION2)
+			.. "\n\n" .. 
+			GetString(SI_RPF_EXPLANATION3),
 		},
 		{
 			type = "submenu",
-			name = _tr("Settings"),
-			tooltip = _tr("Manage general settings"),	--(optional)
+			name = GetString(SI_RPF_SETTINGS),
+			tooltip = GetString(SI_RPF_SETTINGS_TT),	--(optional)
 			controls = Settings:GetControls(),
 		},
 	}

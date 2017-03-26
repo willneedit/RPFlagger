@@ -2,7 +2,7 @@
 ## APIVersion: 100018
 ## OptionalDependsOn: LibAddonMenu-2.0
 ## SavedVariables: RPFSavedVars
-## Version: 1.0.0
+## Version: 1.1.0
 ## Author: iwontsay
 ## Description: iwontsay's RolePlay Flagger
 
@@ -28,7 +28,9 @@ RPFlagger.lua
 
 UI/Settings.lua
 Modules/Titles.lua
+Modules/LongTxt.lua
 
 lang/en.lua
 lang/$(language).lua
 
+Bindings.xml

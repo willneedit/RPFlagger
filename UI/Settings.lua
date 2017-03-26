@@ -19,8 +19,8 @@ function SE:GetControls()
 	return {
 		{
 			type = "dropdown",
-			name = _tr("Guild Ordering"),
-			tooltip = _tr("Determine the ordering of the guilds which are scanned for the focused target's flag"),
+			name = GetString(SI_RPF_GUILDORDER),
+			tooltip = GetString(SI_RPF_GUILDORDER_TT),
 			choices = { "(invalid)" },
 			getFunc = function() return SE:GetSelectedEntry() end,
 			setFunc = function(value) SE:SetSelectedEntry(value) end,
@@ -28,14 +28,14 @@ function SE:GetControls()
 		},
 		{
 			type = "button",
-			name = _tr("Move entry up"),
+			name = GetString(SI_RPF_MOVEUP),
 			width = "half",
 			disabled = function() return SE:GetBtnMoveUpDisabled() end,
 			func = function() return SE:BtnMoveUpClicked() end,
 		},
 		{
 			type = "button",
-			name = _tr("Move entry down"),
+			name = GetString(SI_RPF_MOVEDN),
 			width = "half",
 			disabled = function() return SE:GetBtnMoveDnDisabled() end,
 			func = function() return SE:BtnMoveDnClicked() end,
